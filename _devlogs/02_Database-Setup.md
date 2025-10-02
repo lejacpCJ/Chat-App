@@ -201,7 +201,11 @@ Import and invoke `connectDB` in `/backend/src/index.js`:
 
 ```js
 import { connectDB } from "./lib/db.js";
-connectDB();
+
+app.listen(PORT, () => {
+  console.log("Server is running on port: " + PORT);
+  connectDB();
+});
 ```
 
 ---
