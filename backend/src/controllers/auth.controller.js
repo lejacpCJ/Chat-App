@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
   try {
+    // Validate required fields
     if (!fullName || !email || !password) {
       return res.status(400).json({ message: "All fields are required." });
     }
@@ -14,12 +15,15 @@ export const signup = async (req, res) => {
         .json({ message: "Password must be at least 6 characters." });
     }
 
+    // Check for existing user
     const user = await User.findOne({ email });
     if (user) return res.status(400).json({ message: "Email already exists." });
 
+    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Create new user
     const newUser = new User({
       fullName,
       email,
@@ -27,7 +31,6 @@ export const signup = async (req, res) => {
     });
 
     if (newUser) {
-      // generate jwt token
       generateToken(newUser._id, res);
       await newUser.save();
 
@@ -45,7 +48,6 @@ export const signup = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 export const login = (req, res) => {
   res.send("login route");
 };
