@@ -18,7 +18,7 @@
 ### 1. 建立訊息 model（`/backend/src/models/message.model.js`）
 
 ```js
-# Mongoose model for chat messages
+// Mongoose model for chat messages
 import mongoose from "mongoose";
 // Define message schema
 const messageSchema = new mongoose.Schema(
@@ -52,7 +52,7 @@ export default Message;
 ### 2. 在 `index.js` 註冊訊息 route
 
 ```js
-# Register message route in Express
+// Register message route in Express
 import messageRoutes from "./routes/message.route.js";
 // Register message API route
 app.use("/api/message", messageRoutes);
@@ -61,7 +61,7 @@ app.use("/api/message", messageRoutes);
 ### 3. 建立訊息 route（`/backend/src/routes/message.route.js`）並新增側邊欄 endpoint
 
 ```js
-# Create message route and add sidebar endpoint
+// Create message route and add sidebar endpoint
 import express from "express";
 import { protectRoute } from "../middleware/auth.middleware.js";
 import { getUsersForSidebar } from "../controllers/message.controller.js";
