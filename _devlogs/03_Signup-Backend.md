@@ -23,7 +23,7 @@
 
 ```js
 # Enable JSON request parsing middleware in Express
-app.use(express.json());
+app.use(express.json()); // 解析 JSON 請求內容
 ```
 
 ---
@@ -36,16 +36,19 @@ app.use(express.json());
 # Utility function to generate JWT and set as HTTP-only cookie
 import jwt from "jsonwebtoken";
 
+// 產生 JWT 並設為 HTTP-only cookie
 export const generateToken = (userId, res) => {
+  // 產生 JWT token
   const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
 
+  // 設定 cookie 屬性
   res.cookie("jwt", token, {
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in ms form
-    httpOnly: true, // prevent XSS attacks cross-site scripting attacks
-    sameSite: "strict", // CSRF attacks cross-site request forgery attacks
-    secure: process.env.NODE_ENV !== "development",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 天 (毫秒)
+    httpOnly: true, // 防止 XSS 攻擊
+    sameSite: "strict", // 防止 CSRF 攻擊
+    secure: process.env.NODE_ENV !== "development", // 僅在 production 使用 https
   });
 
   return token;
@@ -61,8 +64,8 @@ export const generateToken = (userId, res) => {
 在 `.env` 檔案中，設定下列環境變數以支援 authentication 與環境組態：
 
 ```
-JWT_SECRET=<your-secret-key>
-NODE_ENV=development
+JWT_SECRET=<your-secret-key> # JWT 密鑰
+NODE_ENV=development # 環境設定
 ```
 
 ---
@@ -76,28 +79,30 @@ import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 
+// 註冊 controller
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
   try {
-    // Validate required fields
+    // 驗證必填欄位
     if (!fullName || !email || !password) {
       return res.status(400).json({ message: "All fields are required." });
     }
+    // 密碼長度檢查
     if (password.length < 6) {
       return res
         .status(400)
         .json({ message: "Password must be at least 6 characters." });
     }
 
-    // Check for existing user
+    // 檢查 email 是否已存在
     const user = await User.findOne({ email });
     if (user) return res.status(400).json({ message: "Email already exists." });
 
-    // Hash password
+    // 密碼加密
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create new user
+    // 建立新使用者
     const newUser = new User({
       fullName,
       email,
@@ -105,9 +110,11 @@ export const signup = async (req, res) => {
     });
 
     if (newUser) {
+      // 產生 JWT 並設 cookie
       generateToken(newUser._id, res);
       await newUser.save();
 
+      // 回傳新使用者資料
       res.status(201).json({
         _id: newUser._id,
         fullName: newUser.fullName,
@@ -118,6 +125,7 @@ export const signup = async (req, res) => {
       res.status(400).json({ message: "Invalid user data." });
     }
   } catch (error) {
+    // 例外處理
     console.error("Error in signup controller", error);
     res.status(500).json({ message: "Internal Server Error" });
   }

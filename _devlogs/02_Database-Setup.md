@@ -30,7 +30,7 @@
 
 ```
 # Example MongoDB connection URI
-mongodb+srv://<username>:<password>@<cluster-url>/chat_db?retryWrites=true&w=majority
+mongodb+srv://<username>:<password>@<cluster-url>/chat_db?retryWrites=true&w=majority # 替換 <username>、<password> 與 <cluster-url>，chat_db 為資料庫名稱
 ```
 
 ---
@@ -42,8 +42,8 @@ mongodb+srv://<username>:<password>@<cluster-url>/chat_db?retryWrites=true&w=maj
 
 ```env
 # Environment variables for MongoDB and server port
- MONGODB_URI=<your-mongodb-uri>
- PORT=5001
+MONGODB_URI=<your-mongodb-uri> # MongoDB 連線字串
+PORT=5001 # 伺服器監聽 port
 ```
 
 ---
@@ -55,9 +55,9 @@ mongodb+srv://<username>:<password>@<cluster-url>/chat_db?retryWrites=true&w=maj
 ```js
 # Import and configure environment variables in backend/src/index.js
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config(); // 載入 .env 檔案
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT; // 取得 port 變數
 ```
 
 ---
@@ -69,11 +69,14 @@ const PORT = process.env.PORT;
 ```js
 import mongoose from "mongoose";
 
+// 資料庫連線函式
 export const connectDB = async () => {
   try {
+    // 連線到 MongoDB
     const conn = await mongoose.connect(process.env.MONGODB_URI);
-    console.log(`MongoDB connected: ${conn.connection.host}`);
+    console.log(`MongoDB connected: ${conn.connection.host}`); // 連線成功
   } catch (error) {
+    // 連線失敗，顯示錯誤並結束程序
     console.error(`MongoDB connection error: ${error}`);
     process.exit(1);
   }
@@ -84,7 +87,7 @@ export const connectDB = async () => {
 
 ```js
 import { connectDB } from "./lib/db.js";
-connectDB();
+connectDB(); // 呼叫資料庫連線
 ```
 
 ---
@@ -96,6 +99,7 @@ connectDB();
 ```js
 import mongoose from "mongoose";
 
+// 定義使用者 schema
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -120,6 +124,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// 建立 User model
 const User = mongoose.model("User", userSchema);
 export default User;
 ```
@@ -163,10 +168,11 @@ mongodb+srv://<username>:<password>@<cluster-url>/chat_db?retryWrites=true&w=maj
 
 1. In the `/backend` directory, create a `.env` file.
 2. Add the following variables:
-   ```env
-   MONGODB_URI=<your-mongodb-uri>
-   PORT=5001
-   ```
+
+```env
+MONGODB_URI=<your-mongodb-uri> # MongoDB connection string
+PORT=5001 # Server port
+```
 
 ---
 
@@ -176,9 +182,9 @@ In `/backend/src/index.js`, load environment variables at the top of the file:
 
 ```js
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config(); // Load environment variables
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT; // Get port from env
 ```
 
 ---
@@ -190,11 +196,14 @@ Create `/backend/src/lib/db.js` with the following content:
 ```js
 import mongoose from "mongoose";
 
+// Database connection function
 export const connectDB = async () => {
   try {
+    // Connect to MongoDB
     const conn = await mongoose.connect(process.env.MONGODB_URI);
-    console.log(`MongoDB connected: ${conn.connection.host}`);
+    console.log(`MongoDB connected: ${conn.connection.host}`); // Success
   } catch (error) {
+    // Connection failed
     console.error(`MongoDB connection error: ${error}`);
     process.exit(1);
   }
@@ -206,6 +215,7 @@ Import and invoke `connectDB` in `/backend/src/index.js`:
 ```js
 import { connectDB } from "./lib/db.js";
 
+// Start server and connect to DB
 app.listen(PORT, () => {
   console.log("Server is running on port: " + PORT);
   connectDB();
@@ -221,6 +231,7 @@ Create `/backend/src/models/user.model.js`:
 ```js
 import mongoose from "mongoose";
 
+// Define user schema
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -245,6 +256,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Create User model
 const User = mongoose.model("User", userSchema);
 export default User;
 ```

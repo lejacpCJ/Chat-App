@@ -21,7 +21,7 @@
 
 ```bash
 # Create frontend and backend folders
-mkdir frontend backend
+mkdir frontend backend # 建立前端與後端目錄
 ```
 
 ---
@@ -32,8 +32,8 @@ mkdir frontend backend
 
 ```bash
 # Initialize frontend with Vite and React
-cd frontend
-npm create vite@latest .
+cd frontend # 進入前端目錄
+npm create vite@latest . # 用 Vite 建立 React 專案
 ```
 
 - 選項：React、JavaScript、No（是否開啟實驗功能）、Yes（執行 npm 安裝與啟動）
@@ -46,22 +46,22 @@ npm create vite@latest .
 
 ```bash
 # Initialize backend Node.js project
-cd ../backend
-npm init -y
+cd ../backend # 切換到後端目錄
+npm init -y # 初始化 Node.js 專案
 ```
 
 安裝主要後端 dependencies：
 
 ```bash
 # Install main backend dependencies
-npm i express mongoose dotenv jsonwebtoken bcryptjs cookie-parser cloudinary socket.io
+npm i express mongoose dotenv jsonwebtoken bcryptjs cookie-parser cloudinary socket.io # 安裝主要後端套件
 ```
 
 安裝開發 dependencies（nodemon）：
 
 ```bash
 # Install development dependencies (nodemon)
-npm i nodemon -D
+npm i nodemon -D # 安裝 nodemon 作為開發依賴
 ```
 
 ---
@@ -71,8 +71,8 @@ npm i nodemon -D
 新增 `src` 資料夾與 `index.js` 檔案：
 
 ```bash
-mkdir src
-touch src/index.js
+mkdir src # 建立 src 資料夾
+touch src/index.js # 建立 index.js 作為 entry point
 ```
 
 實作基本 Express 伺服器：
@@ -81,9 +81,10 @@ touch src/index.js
 // src/index.js
 import express from "express";
 
-const app = express();
+const app = express(); // 建立 Express 應用程式
 
 app.listen(5001, () => {
+  // 啟動伺服器並監聽 5001 port
   console.log("Server is running on port 5001");
 });
 ```
@@ -96,11 +97,11 @@ app.listen(5001, () => {
 
 ```json
 // package.json
-"main": "src/index.js",
+"main": "src/index.js", // 設定 entry point
 "scripts": {
-  "dev": "nodemon src/index.js"
+  "dev": "nodemon src/index.js" // 開發時啟動 nodemon
 },
-"type": "module",
+"type": "module", // 使用 ES module 語法
 ```
 
 ---
@@ -110,7 +111,7 @@ app.listen(5001, () => {
 建立標準後端目錄：
 
 ```bash
-mkdir routes models middleware lib controllers
+mkdir routes models middleware lib controllers # 建立標準後端目錄
 ```
 
 ---
@@ -122,21 +123,24 @@ mkdir routes models middleware lib controllers
 ```js
 // routes/auth.route.js
 import express from "express";
-const router = express.Router();
+const router = express.Router(); // 建立路由物件
 
+// 註冊 signup 路由
 router.post("/signup", (req, res) => {
   res.send("signup route");
 });
 
+// 註冊 login 路由
 router.post("/login", (req, res) => {
   res.send("login route");
 });
 
+// 註冊 logout 路由
 router.post("/logout", (req, res) => {
   res.send("logout route");
 });
 
-export default router;
+export default router; // 匯出路由
 ```
 
 在 index 中 import 並使用 auth route：
@@ -144,6 +148,7 @@ export default router;
 ```js
 // src/index.js
 import authRoutes from "../routes/auth.route.js";
+// 掛載 auth 路由到 /api/auth
 app.use("/api/auth", authRoutes);
 ```
 
@@ -153,14 +158,17 @@ app.use("/api/auth", authRoutes);
 
 ```js
 // controllers/auth.controller.js
+// 註冊 signup controller
 export const signup = (req, res) => {
   res.send("signup route");
 };
 
+// 註冊 login controller
 export const login = (req, res) => {
   res.send("login route");
 };
 
+// 註冊 logout controller
 export const logout = (req, res) => {
   res.send("logout route");
 };
@@ -175,6 +183,7 @@ import { signup, login, logout } from "../controllers/auth.controller.js";
 
 const router = express.Router();
 
+// 使用 controller 處理 signup/login/logout 路由
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/logout", logout);

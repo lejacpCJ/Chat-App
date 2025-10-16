@@ -20,6 +20,7 @@
 ```js
 # Mongoose model for chat messages
 import mongoose from "mongoose";
+// Define message schema
 const messageSchema = new mongoose.Schema(
   {
     senderId: {
@@ -42,6 +43,7 @@ const messageSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Create Message model
 const Message = mongoose.model("Message", messageSchema);
 
 export default Message;
@@ -52,6 +54,7 @@ export default Message;
 ```js
 # Register message route in Express
 import messageRoutes from "./routes/message.route.js";
+// Register message API route
 app.use("/api/message", messageRoutes);
 ```
 
@@ -65,6 +68,7 @@ import { getUsersForSidebar } from "../controllers/message.controller.js";
 
 const router = express.Router();
 
+// Get all users except the logged-in user (sidebar)
 router.get("/users", protectRoute, getUsersForSidebar);
 
 export default router;
@@ -85,8 +89,10 @@ export const getUsersForSidebar = async (req, res) => {
       _id: { $ne: loggedInUserId },
     }).select("-password");
 
+    // Respond with filtered users
     res.status(200).json(filteredUsers);
   } catch (error) {
+    // Handle server error
     console.log("Error in getUsersForSidebar: ", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -98,6 +104,7 @@ export const getUsersForSidebar = async (req, res) => {
 ```js
 import { getMessages } from "../controllers/message.controller.js";
 
+// Get message history between logged-in user and another user
 router.get("/:id", protectRoute, getMessages);
 ```
 
@@ -122,8 +129,10 @@ export const getMessages = async (req, res) => {
       ],
     });
 
+    // Respond with messages
     res.status(200).json(messages);
   } catch (error) {
+    // Handle server error
     console.log("Error in getMessages controller: ", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -135,6 +144,7 @@ export const getMessages = async (req, res) => {
 ```js
 import { sendMessage } from "../controllers/message.controller.js";
 
+// Send a new message to another user
 router.post("/send/:id", protectRoute, sendMessage);
 ```
 
@@ -143,17 +153,20 @@ router.post("/send/:id", protectRoute, sendMessage);
 ```js
 export const sendMessage = async (req, res) => {
   try {
+    // Get message text and image from request body
     const { text, image } = req.body;
+    // Get receiver ID from request body and sender ID from authenticated user
     const { id: receiverId } = req.body;
     const senderId = req.user._id;
 
     let imageUrl;
+    // If image is provided, upload to Cloudinary
     if (image) {
-      // Upload base64 image to cloudinary
       const uploadResponse = await cloudinary.uploader.upload(image);
       imageUrl = uploadResponse.secure_url;
     }
 
+    // Create new message document
     const newMessage = new Message({
       senderId,
       receiverId,
@@ -161,10 +174,13 @@ export const sendMessage = async (req, res) => {
       image: imageUrl,
     });
 
+    // Save message to database
     await newMessage.save();
 
+    // Respond with created message
     res.status(201).json(newMessage);
   } catch (error) {
+    // Handle server error
     console.log("Error in sendMessage controller: ", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -191,6 +207,7 @@ This section describes the implementation of the message model, API endpoints, a
 
 ```js
 import mongoose from "mongoose";
+// Define message schema
 const messageSchema = new mongoose.Schema(
   {
     senderId: {
@@ -213,6 +230,7 @@ const messageSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Create Message model
 const Message = mongoose.model("Message", messageSchema);
 
 export default Message;
@@ -222,6 +240,7 @@ export default Message;
 
 ```js
 import messageRoutes from "./routes/message.route.js";
+// Register message API route
 app.use("/api/message", messageRoutes);
 ```
 
@@ -234,6 +253,7 @@ import { getUsersForSidebar } from "../controllers/message.controller.js";
 
 const router = express.Router();
 
+// Get all users except the logged-in user (sidebar)
 router.get("/users", protectRoute, getUsersForSidebar);
 
 export default router;
@@ -254,8 +274,10 @@ export const getUsersForSidebar = async (req, res) => {
       _id: { $ne: loggedInUserId },
     }).select("-password");
 
+    // Respond with filtered users
     res.status(200).json(filteredUsers);
   } catch (error) {
+    // Handle server error
     console.log("Error in getUsersForSidebar: ", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -267,6 +289,7 @@ export const getUsersForSidebar = async (req, res) => {
 ```js
 import { getMessages } from "../controllers/message.controller.js";
 
+// Get message history between logged-in user and another user
 router.get("/:id", protectRoute, getMessages);
 ```
 
@@ -291,8 +314,10 @@ export const getMessages = async (req, res) => {
       ],
     });
 
+    // Respond with messages
     res.status(200).json(messages);
   } catch (error) {
+    // Handle server error
     console.log("Error in getMessages controller: ", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -304,6 +329,7 @@ export const getMessages = async (req, res) => {
 ```js
 import { sendMessage } from "../controllers/message.controller.js";
 
+// Send a new message to another user
 router.post("/send/:id", protectRoute, sendMessage);
 ```
 
@@ -312,17 +338,20 @@ router.post("/send/:id", protectRoute, sendMessage);
 ```js
 export const sendMessage = async (req, res) => {
   try {
+    // Get message text and image from request body
     const { text, image } = req.body;
+    // Get receiver ID from request body and sender ID from authenticated user
     const { id: receiverId } = req.body;
     const senderId = req.user._id;
 
     let imageUrl;
+    // If image is provided, upload to Cloudinary
     if (image) {
-      // Upload base64 image to cloudinary
       const uploadResponse = await cloudinary.uploader.upload(image);
       imageUrl = uploadResponse.secure_url;
     }
 
+    // Create new message document
     const newMessage = new Message({
       senderId,
       receiverId,
@@ -330,10 +359,13 @@ export const sendMessage = async (req, res) => {
       image: imageUrl,
     });
 
+    // Save message to database
     await newMessage.save();
 
+    // Respond with created message
     res.status(201).json(newMessage);
   } catch (error) {
+    // Handle server error
     console.log("Error in sendMessage controller: ", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
