@@ -29,6 +29,7 @@
 範例：
 
 ```
+# Example MongoDB connection URI
 mongodb+srv://<username>:<password>@<cluster-url>/chat_db?retryWrites=true&w=majority
 ```
 
@@ -38,10 +39,12 @@ mongodb+srv://<username>:<password>@<cluster-url>/chat_db?retryWrites=true&w=maj
 
 1. 在 `/backend` 目錄中建立 `.env` 檔案。
 2. 新增以下變數：
-   ```env
-   MONGODB_URI=<your-mongodb-uri>
-   PORT=5001
-   ```
+
+```env
+# Environment variables for MongoDB and server port
+ MONGODB_URI=<your-mongodb-uri>
+ PORT=5001
+```
 
 ---
 
@@ -50,6 +53,7 @@ mongodb+srv://<username>:<password>@<cluster-url>/chat_db?retryWrites=true&w=maj
 在 `/backend/src/index.js` 檔案最上方 import 環境變數：
 
 ```js
+# Import and configure environment variables in backend/src/index.js
 import dotenv from "dotenv";
 dotenv.config();
 

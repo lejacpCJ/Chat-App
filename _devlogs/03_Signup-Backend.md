@@ -22,6 +22,7 @@
 在 `index.js`，於所有 routes 前加入以下 middleware，讓 Express 應用程式能解析傳入的 JSON payload：
 
 ```js
+# Enable JSON request parsing middleware in Express
 app.use(express.json());
 ```
 
@@ -32,6 +33,7 @@ app.use(express.json());
 建立 `backend/src/lib/utils.js`，新增一個 utility function 用於產生 JWT token 並將其設為 HTTP-only cookie：
 
 ```js
+# Utility function to generate JWT and set as HTTP-only cookie
 import jwt from "jsonwebtoken";
 
 export const generateToken = (userId, res) => {
@@ -49,6 +51,8 @@ export const generateToken = (userId, res) => {
   return token;
 };
 ```
+
+# Environment variable for JWT secret
 
 ---
 

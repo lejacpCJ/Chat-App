@@ -44,17 +44,20 @@ export const getMessages = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
   try {
+    // Extract message text and image from request body
     const { text, image } = req.body;
+    // Get receiver ID from request body and sender ID from authenticated user
     const { id: receiverId } = req.body;
     const senderId = req.user._id;
 
     let imageUrl;
+    // If image is provided, upload to Cloudinary
     if (image) {
-      // Upload base64 image to cloudinary
       const uploadResponse = await cloudinary.uploader.upload(image);
       imageUrl = uploadResponse.secure_url;
     }
 
+    // Create new message document
     const newMessage = new Message({
       senderId,
       receiverId,
@@ -62,12 +65,15 @@ export const sendMessage = async (req, res) => {
       image: imageUrl,
     });
 
+    // Save message to database
     await newMessage.save();
 
-    // todo: realtime func => socket.io
+    // TODO: Add real-time messaging with socket.io
 
+    // Respond with created message
     res.status(201).json(newMessage);
   } catch (error) {
+    // Handle server errors
     console.log("Error in sendMessage controller: ", error.message);
     res.status(500).json({ error: "Internal server error" });
   }

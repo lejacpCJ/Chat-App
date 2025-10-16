@@ -20,6 +20,7 @@
 ### 1. 實作登入功能（`auth.controller.js`）
 
 ```js
+# Login controller function
 export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -48,6 +49,7 @@ export const login = async (req, res) => {
 ### 2. 實作登出功能（`auth.controller.js`）
 
 ```js
+# Logout controller function
 export const logout = (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 0 });

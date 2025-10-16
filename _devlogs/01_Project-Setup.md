@@ -20,6 +20,7 @@
 ### 1. 建立前端與後端目錄
 
 ```bash
+# Create frontend and backend folders
 mkdir frontend backend
 ```
 
@@ -30,6 +31,7 @@ mkdir frontend backend
 進入 `frontend` 目錄，並用 Vite 建立 React 專案：
 
 ```bash
+# Initialize frontend with Vite and React
 cd frontend
 npm create vite@latest .
 ```
@@ -43,6 +45,7 @@ npm create vite@latest .
 切換到 `backend` 目錄，初始化 Node.js 專案：
 
 ```bash
+# Initialize backend Node.js project
 cd ../backend
 npm init -y
 ```
@@ -50,12 +53,14 @@ npm init -y
 安裝主要後端 dependencies：
 
 ```bash
+# Install main backend dependencies
 npm i express mongoose dotenv jsonwebtoken bcryptjs cookie-parser cloudinary socket.io
 ```
 
 安裝開發 dependencies（nodemon）：
 
 ```bash
+# Install development dependencies (nodemon)
 npm i nodemon -D
 ```
 
